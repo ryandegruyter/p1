@@ -1,40 +1,63 @@
 package be.ryan.popularmovies.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.List;
 
 import be.ryan.popularmovies.R;
+import be.ryan.popularmovies.domain.PopularMovie;
 import be.ryan.popularmovies.domain.PopularMoviesPage;
 import be.ryan.popularmovies.tmdb.TmdbService;
 import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
+import be.ryan.popularmovies.ui.adapter.PopularMoviesAdapter;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity implements RequestInterceptor, Callback<PopularMoviesPage> {
+public class MainActivity extends Activity implements RequestInterceptor, Callback<PopularMoviesPage> {
 
-    private TextView mDescriptionView;
+    private RecyclerView mPopularMoviesRecyclerView;
+    private RecyclerView.Adapter mPopularMoviesAdapter;
+    private RecyclerView.LayoutManager mPopularMoviesLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPopularMoviesRecyclerView = (RecyclerView) findViewById(R.id.popular_movies_recycler_view);
+        initRecyclerView();
+
+        initWebService();
+    }
+
+    private void initRecyclerView() {
+        mPopularMoviesRecyclerView.setHasFixedSize(true);
+        mPopularMoviesLayoutManager = new GridLayoutManager(this, 3);
+        mPopularMoviesRecyclerView.setLayoutManager(mPopularMoviesLayoutManager);
+    }
+
+    private void setRecyclerViewAdapter(List<PopularMovie> popularMovieList){
+        //TODO: Set Adapter
+        mPopularMoviesAdapter = new PopularMoviesAdapter(this,popularMovieList);
+        mPopularMoviesRecyclerView.setAdapter(mPopularMoviesAdapter);
+    }
+
+    private void initWebService() {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(TmdbWebServiceContract.BASE_URL)
                 .setRequestInterceptor(this)
                 .build();
         final TmdbService tmdbService = restAdapter.create(TmdbService.class);
         tmdbService.listPopularMovies(this);
-        mDescriptionView = (TextView) findViewById(R.id.Description);
     }
-
 
 
     @Override
@@ -67,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements RequestIntercepto
     @Override
     public void success(PopularMoviesPage popularMoviesPage, Response response) {
         //TODO: populate grid/recycler view with popular movies
+        setRecyclerViewAdapter(popularMoviesPage.getPopularMovieList());
+
     }
 
     @Override
