@@ -1,12 +1,16 @@
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     
     <ImageView
 
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_detail_backdrop_height"
+        android:layout_height="0px"
+        android:layout_weight="2"
         android:id="@+id/movie_detail_backdrop" />
 
     <TextView
@@ -32,8 +36,9 @@
         android:layout_below="@id/release_date"/>
 
     <TextView
+        android:layout_weight="1"
         android:layout_below="@id/vote_average"
         android:id="@+id/synopsis"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        android:layout_height="0px" />
+</LinearLayout>

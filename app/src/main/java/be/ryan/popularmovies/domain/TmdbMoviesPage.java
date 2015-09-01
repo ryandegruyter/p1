@@ -10,13 +10,13 @@ import java.util.List;
  * Created by Ryan on 27/08/2015.
  */
 @Parcel
-public class PopularMoviesPage {
+public class TmdbMoviesPage {
 
     @SerializedName("page")
     public int pageNr;
 
     @SerializedName("results")
-    private List<PopularMovie> popularMovieList;
+    private List<TmdbMovie> tmdbMovieList;
 
     @SerializedName("total_pages")
     private int total_pages;
@@ -28,8 +28,8 @@ public class PopularMoviesPage {
         return pageNr;
     }
 
-    public List<PopularMovie> getPopularMovieList() {
-        return popularMovieList;
+    public List<TmdbMovie> getTmdbMovieList() {
+        return tmdbMovieList;
     }
 
     public int getTotal_pages() {
@@ -42,9 +42,9 @@ public class PopularMoviesPage {
 
     @Override
     public String toString() {
-        return "PopularMoviesPage{" +
+        return "TmdbMoviesPage{" +
                 "pageNr=" + pageNr +
-                ", popularMovieList=" + popularMovieList +
+                ", tmdbMovieList=" + tmdbMovieList +
                 ", total_pages=" + total_pages +
                 ", total_results=" + total_results +
                 '}';

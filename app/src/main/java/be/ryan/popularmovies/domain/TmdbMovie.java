@@ -11,9 +11,9 @@ import java.util.List;
  * Created by Ryan on 29/08/2015.
  */
 @Parcel
-public class PopularMovie {
+public class TmdbMovie {
 
-    public PopularMovie() {
+    public TmdbMovie() {
     }
 
     @SerializedName("adult")
@@ -170,7 +170,7 @@ public class PopularMovie {
 
     @Override
     public String toString() {
-        return "PopularMovie{" +
+        return "TmdbMovie{" +
                 "isAdult=" + isAdult +
                 ", backdropImgPath='" + backdropImgPath + '\'' +
                 ", genreIds=" + Arrays.toString(genreIds) +

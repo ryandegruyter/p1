@@ -1,8 +1,6 @@
 package be.ryan.popularmovies.tmdb;
 
-import java.util.List;
-
-import be.ryan.popularmovies.domain.PopularMoviesPage;
+import be.ryan.popularmovies.domain.TmdbMoviesPage;
 import retrofit.Callback;
 import retrofit.http.GET;
 
@@ -12,6 +10,14 @@ import retrofit.http.GET;
 public interface TmdbService {
 
     @GET("/movie/popular")
-    void listPopularMovies(Callback<PopularMoviesPage> callback);
+    void listPopularMovies(Callback<TmdbMoviesPage> callback);
 
+    @GET("/movie/top_rated")
+    void listTopRatedMovies(Callback<TmdbMoviesPage> callback);
+
+    @GET("/movie/now_playing")
+    void listNowPlayingMovies(Callback<TmdbMoviesPage> callback);
+
+    @GET("/movie/upcoming")
+    void listUpcoming(Callback<TmdbMoviesPage> callback);
 }

@@ -1,6 +1,5 @@
 package be.ryan.popularmovies.ui.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +7,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import be.ryan.popularmovies.R;
-import be.ryan.popularmovies.domain.PopularMovie;
+import be.ryan.popularmovies.domain.TmdbMovie;
 import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
 import de.greenrobot.event.EventBus;
 
@@ -18,11 +17,11 @@ import de.greenrobot.event.EventBus;
 public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     ImageView poster = null;
-    PopularMovie mPopularMovie;
+    TmdbMovie mTmdbMovie;
 
     @Override
     public void onClick(View v) {
-        EventBus.getDefault().post(mPopularMovie);
+        EventBus.getDefault().post(mTmdbMovie);
     }
 
 
@@ -33,13 +32,13 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     }
 
-    void bindData(PopularMovie movie) {
+    void bindData(TmdbMovie movie) {
         final String posterImgPath = movie.getPosterImgPath();
         String uri = TmdbWebServiceContract.BASE_POSTER_IMG_URL + "/" + posterImgPath;
         //TODO: In the future cache the image and get it locally, or does picasso do that automatically?
         //TODO: Set Error Picture
         //TODO: PlaceholdeR?
-        mPopularMovie = movie;
+        mTmdbMovie = movie;
         Picasso.with(poster.getContext()).load(uri).into(poster);
     }
 }

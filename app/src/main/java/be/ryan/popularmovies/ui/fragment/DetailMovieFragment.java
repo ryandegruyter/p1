@@ -13,24 +13,24 @@ import com.squareup.picasso.Picasso;
 import org.parceler.Parcels;
 
 import be.ryan.popularmovies.R;
-import be.ryan.popularmovies.domain.PopularMovie;
+import be.ryan.popularmovies.domain.TmdbMovie;
 import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
 
 public class DetailMovieFragment extends android.support.v4.app.Fragment {
 
     private static final String ARG_MOVIE = "movie";
 
-    private PopularMovie mMovie;
+    private TmdbMovie mMovie;
     private ImageView mBackdropView;
     private TextView mTitleView;
     private TextView mReleaseDateView;
     private RatingBar mVoteAverageView;
     private TextView mSynopsisView;
 
-    public static DetailMovieFragment newInstance(PopularMovie popularMovie) {
+    public static DetailMovieFragment newInstance(TmdbMovie tmdbMovie) {
         DetailMovieFragment fragment = new DetailMovieFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_MOVIE, Parcels.wrap(popularMovie));
+        args.putParcelable(ARG_MOVIE, Parcels.wrap(tmdbMovie));
         fragment.setArguments(args);
         return fragment;
     }
