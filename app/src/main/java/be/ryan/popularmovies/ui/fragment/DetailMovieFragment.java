@@ -1,49 +1,36 @@
 package be.ryan.popularmovies.ui.fragment;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import be.ryan.popularmovies.R;
+import be.ryan.popularmovies.domain.PopularMovie;
+import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DetailMovieFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DetailMovieFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DetailMovieFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class DetailMovieFragment extends android.support.v4.app.Fragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_MOVIE = "movie";
 
-    private OnFragmentInteractionListener mListener;
+    private PopularMovie mMovie;
+    private ImageView mBackdropView;
+    private TextView mTitleView;
+    private TextView mReleaseDateView;
+    private RatingBar mVoteAverageView;
+    private TextView mSynopsisView;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailMovieFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetailMovieFragment newInstance(String param1, String param2) {
+    public static DetailMovieFragment newInstance(PopularMovie popularMovie) {
         DetailMovieFragment fragment = new DetailMovieFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_MOVIE, Parcels.wrap(popularMovie));
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,55 +43,30 @@ public class DetailMovieFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mMovie = Parcels.unwrap(getArguments().getParcelable(ARG_MOVIE));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail_movie, container, false);
-    }
+        final View view = inflater.inflate(R.layout.fragment_detail_movie, container, false);
+        mBackdropView = (ImageView) view.findViewById(R.id.movie_detail_backdrop);
+        String uri = TmdbWebServiceContract.BASE_BACKDROP_IMG_URL + mMovie.getBackdropImgPath();
+        Picasso.with(view.getContext()).load(uri).into(mBackdropView);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        mTitleView = (TextView) view.findViewById(R.id.movie_title);
+        mTitleView.setText(mMovie.getTitle());
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+        mReleaseDateView = (TextView) view.findViewById(R.id.release_date);
+        mReleaseDateView.setText(mMovie.getReleaseDate());
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+        mVoteAverageView = (RatingBar) view.findViewById(R.id.vote_average);
+        mVoteAverageView.setRating((float) mMovie.getVoteAverage());
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+        mSynopsisView = (TextView) view.findViewById(R.id.synopsis);
+        mSynopsisView.setText(mMovie.getOverView());
 
+        return view;
+    }
 }

@@ -12,45 +12,105 @@ import java.util.List;
  */
 @Parcel
 public class PopularMovie {
+
+    public PopularMovie() {
+    }
+
     @SerializedName("adult")
-    private boolean isAdult;
+    boolean isAdult;
 
     @SerializedName("backdrop_path")
-    private String backdropImgPath;
+    String backdropImgPath;
 
     @SerializedName("genre_ids")
-    private int[] genreIds;
+     int[] genreIds;
 
-    private int id;
+     int id;
 
     @SerializedName("original_language")
-    private String originalLanguage;
+     String originalLanguage;
 
     @SerializedName("original_title")
-    private String original_title;
+     String original_title;
 
     @SerializedName("overview")
-    private String overView;
+     String overView;
 
     @SerializedName("release_date")
-    private String releaseDate;
+     String releaseDate;
 
     @SerializedName("poster_path")
-    private String posterImgPath;
+     String posterImgPath;
 
     @SerializedName("popularity")
-    private Double popularity;
+     Double popularity;
 
-    private String title;
+     String title;
 
     @SerializedName("video")
-    private boolean isVideo;
+     boolean isVideo;
 
     @SerializedName("vote_average")
-    private double voteAverage;
+     double voteAverage;
 
     @SerializedName("vote_count")
-    private int voteCount;
+    int voteCount;
+
+    public void setIsAdult(boolean isAdult) {
+        this.isAdult = isAdult;
+    }
+
+    public void setBackdropImgPath(String backdropImgPath) {
+        this.backdropImgPath = backdropImgPath;
+    }
+
+    public void setGenreIds(int[] genreIds) {
+        this.genreIds = genreIds;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public void setOriginal_title(String original_title) {
+        this.original_title = original_title;
+    }
+
+    public void setOverView(String overView) {
+        this.overView = overView;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setPosterImgPath(String posterImgPath) {
+        this.posterImgPath = posterImgPath;
+    }
+
+    public void setPopularity(Double popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setIsVideo(boolean isVideo) {
+        this.isVideo = isVideo;
+    }
+
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
 
     public boolean isAdult() {
         return isAdult;

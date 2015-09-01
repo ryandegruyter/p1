@@ -1,62 +1,34 @@
 package be.ryan.popularmovies.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.List;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import be.ryan.popularmovies.R;
 import be.ryan.popularmovies.domain.PopularMovie;
-import be.ryan.popularmovies.domain.PopularMoviesPage;
-import be.ryan.popularmovies.tmdb.TmdbService;
-import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
-import be.ryan.popularmovies.ui.adapter.PopularMoviesAdapter;
-import retrofit.Callback;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import be.ryan.popularmovies.ui.fragment.DetailMovieFragment;
+import be.ryan.popularmovies.ui.fragment.MovieListFragment;
+import de.greenrobot.event.EventBus;
 
-public class MainActivity extends Activity implements RequestInterceptor, Callback<PopularMoviesPage> {
+public class MainActivity extends ActionBarActivity  {
 
-    private RecyclerView mPopularMoviesRecyclerView;
-    private RecyclerView.Adapter mPopularMoviesAdapter;
-    private RecyclerView.LayoutManager mPopularMoviesLayoutManager;
+    public String TAG_MOVIE_LIST_FRAGMENT = "movie_list";
+    public String TAG_MOVIE_DETAIL_FRAGMENT = "detail_movie";
+
+    RelativeLayout mContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO: handle orientation change to retain fragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPopularMoviesRecyclerView = (RecyclerView) findViewById(R.id.popular_movies_recycler_view);
-        initRecyclerView();
 
-        initWebService();
-    }
+        mContainerView = (RelativeLayout) findViewById(R.id.main_container);
 
-    private void initRecyclerView() {
-        mPopularMoviesRecyclerView.setHasFixedSize(true);
-        mPopularMoviesLayoutManager = new GridLayoutManager(this, 3);
-        mPopularMoviesRecyclerView.setLayoutManager(mPopularMoviesLayoutManager);
-    }
-
-    private void setRecyclerViewAdapter(List<PopularMovie> popularMovieList){
-        //TODO: Set Adapter
-        mPopularMoviesAdapter = new PopularMoviesAdapter(this,popularMovieList);
-        mPopularMoviesRecyclerView.setAdapter(mPopularMoviesAdapter);
-    }
-
-    private void initWebService() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(TmdbWebServiceContract.BASE_URL)
-                .setRequestInterceptor(this)
-                .build();
-        final TmdbService tmdbService = restAdapter.create(TmdbService.class);
-        tmdbService.listPopularMovies(this);
+        getSupportFragmentManager().beginTransaction().replace(mContainerView.getId(), new MovieListFragment(), TAG_MOVIE_LIST_FRAGMENT).commit();
     }
 
 
@@ -83,20 +55,22 @@ public class MainActivity extends Activity implements RequestInterceptor, Callba
     }
 
     @Override
-    public void intercept(RequestFacade request) {
-        request.addQueryParam(TmdbWebServiceContract.QUERY_PARAM_API_KEY, TmdbWebServiceContract.API_KEY);
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void success(PopularMoviesPage popularMoviesPage, Response response) {
-        //TODO: populate grid/recycler view with popular movies
-        setRecyclerViewAdapter(popularMoviesPage.getPopularMovieList());
-
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void failure(RetrofitError error) {
-        //TODO respond properly to errors
+    public void onEvent(PopularMovie movie) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(mContainerView.getId(), DetailMovieFragment.newInstance(movie), TAG_MOVIE_DETAIL_FRAGMENT)
+                .addToBackStack(null)
+                .commit();
 
     }
 }
