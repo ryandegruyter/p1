@@ -12,9 +12,12 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+
 import be.ryan.popularmovies.R;
 import be.ryan.popularmovies.domain.TmdbMovie;
 import be.ryan.popularmovies.tmdb.TmdbWebServiceContract;
+import be.ryan.popularmovies.ui.util.Utility;
 
 public class DetailMovieFragment extends android.support.v4.app.Fragment {
 
@@ -26,6 +29,7 @@ public class DetailMovieFragment extends android.support.v4.app.Fragment {
     private TextView mReleaseDateView;
     private RatingBar mVoteAverageView;
     private TextView mSynopsisView;
+    private RatingBar mRatingBar;
 
     public static DetailMovieFragment newInstance(TmdbMovie tmdbMovie) {
         DetailMovieFragment fragment = new DetailMovieFragment();
@@ -52,14 +56,18 @@ public class DetailMovieFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_detail_movie, container, false);
         mBackdropView = (ImageView) view.findViewById(R.id.movie_detail_backdrop);
-        String uri = TmdbWebServiceContract.BASE_BACKDROP_IMG_URL + mMovie.getBackdropImgPath();
-        Picasso.with(view.getContext()).load(uri).into(mBackdropView);
+        String uri = getMovieImgUri();
 
+        Picasso.with(view.getContext()).load(uri).into(mBackdropView);
         mTitleView = (TextView) view.findViewById(R.id.movie_title);
         mTitleView.setText(mMovie.getTitle());
 
         mReleaseDateView = (TextView) view.findViewById(R.id.release_date);
-        mReleaseDateView.setText(mMovie.getReleaseDate());
+        try {
+            mReleaseDateView.setText(Utility.convertToMovieDate(mMovie.getReleaseDate()));
+        } catch (ParseException e) {
+            mReleaseDateView.setText(mMovie.getReleaseDate());
+        }
 
         mVoteAverageView = (RatingBar) view.findViewById(R.id.vote_average);
         mVoteAverageView.setRating((float) mMovie.getVoteAverage());
@@ -67,6 +75,16 @@ public class DetailMovieFragment extends android.support.v4.app.Fragment {
         mSynopsisView = (TextView) view.findViewById(R.id.synopsis);
         mSynopsisView.setText(mMovie.getOverView());
 
+        mRatingBar = (RatingBar) view.findViewById(R.id.vote_average);
+        mRatingBar.setRating((float) mMovie.getVoteAverage()/2);
         return view;
+    }
+
+    private String getMovieImgUri() {
+        if (Utility.IsLandscape(getActivity())) {
+            return TmdbWebServiceContract.BASE_POSTER_IMG_URL + mMovie.getPosterImgPath();
+        }else {
+            return TmdbWebServiceContract.BASE_BACKDROP_IMG_URL + mMovie.getBackdropImgPath();
+        }
     }
 }
